@@ -1,0 +1,86 @@
+<style>
+	iframe {border:0 none;}
+	.dataPanel{
+		background-color:#f5f5f5;
+	}
+</style>
+ 
+<div class = "well">
+	<button class = "btn"><a href = '#/'>Back</a></button>
+	<button class = "btn btn-info"><a href = '#forcast_f' style = "color:white;">Fahrenheit</a></button><br><hr>
+	
+	<div class = "row" style="margin-top:-15px">
+		<div class= "col-md-6">
+			<table >
+				<tr><h2>Today's Forecast for: {{city}} </h2></tr>
+				<tr>
+					<td><strong>Temperautre: </strong> {{convertToCelcius(forecast.list[0].temp.day)}} C</td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td ><strong>High: </strong> {{convertToCelcius(forecast.list[0].temp.max)}} C</td>
+					<td></td>
+					<td style = "padding-left:15px;"><strong>Weather: </strong> {{forecast.list[0].weather[0].description}}</td>
+				</tr>
+				
+				<tr>
+					<td><strong>Low: </strong> {{convertToCelcius(forecast.list[0].temp.min)}} C</td>
+					<td></td>
+					<td style = "padding-left:15px;"><strong>Wind: </strong> {{forecast.list[0].speed}} mph</td>
+				</tr>
+				
+				<tr>
+					<td ><strong>Humidity: </strong>{{forecast.list[0].humidity}} %</td>
+					<td></td>
+				</tr>
+
+			</table>
+		</div>
+		
+		<br>
+		<div id = "map" class = "col-md-5 panel panel-heading" style= "float:top;">
+			<h5>Open Map</h5>
+			<iframe id = "google_map" style = "width:100%; height:200px; display:none;"></iframe>
+		</div>	
+	</div>
+</div>
+	<div class = "container">
+	<div class = "row">
+	<h4>Upcoming Forecast</h4>
+	<div ng-repeat= "w in forecast.list| limitTo:7 | startFrom : 1" >
+		<div class = " col-md-2 panel panel-heading dataPanel">
+			<i class = "glyphicon glyphicon-chevron-right"/><strong> {{convertDate(w.dt) | date: 'EEE'}}</strong>
+			<div class = "panel panel-default dateData" style = "display:none;padding-left:15px; padding-top:15px;" >
+				<div class=  "row">
+						<div class = "col-md-3 col-sm-3 col-xs-4">	
+							<p><strong>High:</strong> {{convertToCelcius(w.temp.max)}} C</p>
+							<p><strong>Low:</strong> {{convertToCelcius(w.temp.min)}} C</p>
+							<p><strong>humidity:</strong> {{convertToCelcius(w.humidity)}} %</p>
+						</div>
+						<div class = "col-md-9 col-sm-9 col-xs-8">
+							<img src = "{{getWeatherImage(w.weather[0].id)}}" />
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+<hr>
+
+<script>
+	$(document).ready(function(){
+		$("#map").on("click", function(){
+			$("iframe").toggle("display:none;");
+			$("#map h5").text(function(i, text){
+				return text === "Open Map" ? "Close Map" : "Open Map";
+			});
+
+		$(document).unbind().on("click", ".dataPanel", function(){
+			console.log("clicked");
+			$(this).find("div").first().toggle("display:none;");
+			$(this).find("i").toggle("display:none;");
+		});
+		});
+	});
+</script>
